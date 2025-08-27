@@ -1,0 +1,53 @@
+{% extends "index.html" %}
+
+{% block title %}
+    Perfil - {{ user.username }}
+{% endblock %}
+
+{% block body %}
+    {% include "navbar.html" %}
+    
+    <div class="container">
+        {% if form %}
+        <form method="POST" enctype="multipart/form-data"  class="bloco-add-img">
+            {{ form.csrf_token }}
+            <h2>{{ user.username }} - Enviar foto</h2>
+
+            <div class="bloco-arquivo">
+                <label for="foto" class="botao-arquivo">
+                    Escolher arquivo
+                    {{ form.photo(class="input-arquivo", id="foto") }}
+                </label>
+                <span id="imagem-arquivo" class=""></span>
+            </div>
+
+            {{ form.submit_button(class="botao-login") }}
+        </form>
+        
+        {% else %}
+            <div class="bloco-add-img">
+                <h2>{{ user.username }} - Ver perfil</h2>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="conteudo">
+        {% for post in user.posts %}
+            <div class="bloco-imagem">
+                <img src="{{ url_for('static', filename='fotos_posts/{}'.format(post.image)) }}" alt="Pinterest 1" />
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        let input = document.getElementById("foto");
+        let imagemArquivo = document.getElementById("imagem-arquivo");
+
+        input.addEventListener("change", () => {
+            let inputImagem = document.querySelector("input[type=file]").files[0];
+
+            imagemArquivo.classList.add("visivel")
+            imagemArquivo.innerText = inputImagem.name;
+        });
+    </script>
+{% endblock %}
